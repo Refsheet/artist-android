@@ -3,7 +3,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 public class JavaScriptInterface {
-    Context mContext;
+    private Context mContext;
 
     JavaScriptInterface(Context c) {
         mContext = c;
