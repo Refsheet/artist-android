@@ -4,7 +4,13 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Main extends AppCompatActivity {
@@ -12,6 +18,8 @@ public class Main extends AppCompatActivity {
     private String PROD_URL = "https://extension.refsheet.net";
 
     private WebView mWebView;
+    private TextView mLoadingText;
+    private ProgressBar mLoadingProgress;
     private ShakeResponder mShakeResponder;
 
     private boolean webViewInitialized = false;
@@ -21,24 +29,46 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mWebView = findViewById(R.id.root);
+        mLoadingText = findViewById(R.id.loading_message);
+        mLoadingProgress = findViewById(R.id.loading_progress);
+
         configureWebView();
         configureShaker();
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void configureWebView() {
+        final Main _this = this;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
 
         // Configure Webview:
-        mWebView = findViewById(R.id.root);
         mWebView.getSettings().setJavaScriptEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             JavaScriptInterface jsInterface = new JavaScriptInterface(this);
             mWebView.addJavascriptInterface(jsInterface, "Android");
         }
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error){
+                String errorMsg = getString(R.string.errors_no_internet);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    errorMsg += "\n\n" + error.getDescription();
+                }
+                _this.showLoading(errorMsg);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                _this.hideLoading();
+            }
+        });
 
         if (!webViewInitialized) {
             webViewInitialized = true;
@@ -48,12 +78,12 @@ public class Main extends AppCompatActivity {
     }
 
     private void configureShaker() {
+        final Main _this = this;
+
         mShakeResponder = new ShakeResponder(this) {
             @Override
             protected void onShake() {
-                Toast toast = Toast.makeText(getApplicationContext(), "AAAAAAA Shaking is rude! (refreshing)", Toast.LENGTH_LONG);
-                toast.show();
-
+                _this.toast("AAAAAAA Shaking is rude! (refreshing)");
                 mWebView.reload();
             }
         };
@@ -71,5 +101,25 @@ public class Main extends AppCompatActivity {
         mShakeResponder.unregister();
         mWebView.onPause();
         super.onPause();
+    }
+
+    // UI Action Stuff
+
+    private void toast(String text) {
+        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    private void hideLoading() {
+        mWebView.setVisibility(View.VISIBLE);
+        mLoadingProgress.setVisibility(View.GONE);
+        mLoadingText.setVisibility(View.GONE);
+    }
+
+    private void showLoading(String text) {
+        mWebView.setVisibility(View.GONE);
+        mLoadingProgress.setVisibility(View.VISIBLE);
+        mLoadingText.setVisibility(View.VISIBLE);
+        mLoadingText.setText(text);
     }
 }

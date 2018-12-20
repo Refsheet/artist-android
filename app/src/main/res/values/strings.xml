@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Refsheet Artist</string>
+    <string name="loading.loading">Loading...</string>
+    <string name="errors.no_internet">Your Internet Connection May not be active Or</string>
 </resources>
