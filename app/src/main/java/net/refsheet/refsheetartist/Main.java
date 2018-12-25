@@ -23,6 +23,7 @@ public class Main extends AppCompatActivity {
     private ShakeResponder mShakeResponder;
 
     private boolean webViewInitialized = false;
+    private boolean webViewHasError = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +62,13 @@ public class Main extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     errorMsg += "\n\n" + error.getDescription();
                 }
-                _this.showLoading(errorMsg);
+                _this.showLoading(errorMsg, true);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                _this.hideLoading();
+                if (!webViewHasError)
+                    _this.hideLoading();
             }
         });
 
@@ -83,7 +85,8 @@ public class Main extends AppCompatActivity {
         mShakeResponder = new ShakeResponder(this) {
             @Override
             protected void onShake() {
-                _this.toast("AAAAAAA Shaking is rude! (refreshing)");
+                _this.toast(getString(R.string.loading_refreshing_toast));
+                _this.showLoading(getString(R.string.loading_refreshing));
                 mWebView.reload();
             }
         };
@@ -117,9 +120,14 @@ public class Main extends AppCompatActivity {
     }
 
     private void showLoading(String text) {
+        showLoading(text, false);
+    }
+
+    private void showLoading(String text, boolean isError) {
         mWebView.setVisibility(View.GONE);
         mLoadingProgress.setVisibility(View.VISIBLE);
         mLoadingText.setVisibility(View.VISIBLE);
         mLoadingText.setText(text);
+        webViewHasError = isError;
     }
 }

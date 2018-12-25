@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Refsheet Artist</string>
+    <string name="loading.loading">Загрузка...</string>
+    <string name="errors.no_internet">Ошибка при подключении:</string>
+    <string name="loading.refreshing">Обновление...</string>
+    <string name="loading.refreshing_toast">Не трясите, я не сплю! (Обновление)</string>
+</resources>

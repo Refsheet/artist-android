@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Refsheet Artist</string>
     <string name="loading.loading">Loading...</string>
-    <string name="errors.no_internet">Your Internet Connection May not be active Or</string>
+    <string name="errors.no_internet">Error connecting to Refsheet.net:</string>
+    <string name="loading.refreshing">Refreshing...</string>
+    <string name="loading.refreshing_toast">AAAAAAA Shaking is rude! (refreshing)</string>
 </resources>
