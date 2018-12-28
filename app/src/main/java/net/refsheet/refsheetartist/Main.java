@@ -2,6 +2,7 @@ package net.refsheet.refsheetartist;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ public class Main extends AppCompatActivity {
     private TextView mLoadingText;
     private ProgressBar mLoadingProgress;
     private ShakeResponder mShakeResponder;
+    private DrawerLayout mDrawerLayout;
 
     private boolean webViewInitialized = false;
     private boolean webViewHasError = false;
@@ -33,6 +35,7 @@ public class Main extends AppCompatActivity {
         mWebView = findViewById(R.id.root);
         mLoadingText = findViewById(R.id.loading_message);
         mLoadingProgress = findViewById(R.id.loading_progress);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
 
         configureWebView();
         configureShaker();
@@ -50,7 +53,7 @@ public class Main extends AppCompatActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            JavaScriptInterface jsInterface = new JavaScriptInterface(this);
+            JavaScriptInterface jsInterface = new JavaScriptInterface(this, mDrawerLayout);
             mWebView.addJavascriptInterface(jsInterface, "Android");
         }
 

@@ -1,5 +1,7 @@
 package net.refsheet.refsheetartist;
 import android.content.Context;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -11,9 +13,11 @@ import java.io.InputStreamReader;
 
 public class JavaScriptInterface {
     private Context mContext;
+    private DrawerLayout mDrawerLayout;
 
-    JavaScriptInterface(Context c) {
+    JavaScriptInterface(Context c, DrawerLayout drawerLayout) {
         mContext = c;
+        mDrawerLayout = drawerLayout;
     }
 
     @android.webkit.JavascriptInterface
@@ -78,5 +82,15 @@ public class JavaScriptInterface {
     @android.webkit.JavascriptInterface
     public String getVersion() {
         return BuildConfig.VERSION_NAME;
+    }
+
+    @android.webkit.JavascriptInterface
+    public void openMenu() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @android.webkit.JavascriptInterface
+    public void closeMenu() {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 }
