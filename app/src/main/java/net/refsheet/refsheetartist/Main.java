@@ -6,6 +6,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -74,6 +76,17 @@ public class Main extends AppCompatActivity {
                     _this.hideLoading();
             }
         });
+
+        // Configure Cookies
+
+        CookieManager cookies = CookieManager.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookies.setAcceptThirdPartyCookies(mWebView, true);
+        } else {
+            cookies.setAcceptCookie(true);
+        }
+
+        // Initialize
 
         if (!webViewInitialized) {
             webViewInitialized = true;
